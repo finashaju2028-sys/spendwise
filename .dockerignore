@@ -1,0 +1,7 @@
+.git
+.gitignore
+test/
+*.png
+*.log
+Dockerfile
+.dockerignore

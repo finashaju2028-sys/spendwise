@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spendwise-deployment
+  labels:
+    app: spendwise
+    tier: frontend
+spec:
+  # Initial replica count configured to 2 Pods
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spendwise
+  template:
+    metadata:
+      labels:
+        app: spendwise
+        tier: frontend
+    spec:
+      containers:
+      - name: spendwise
+        image: spendwise:v1
+        # Use local image without attempting remote registry pull
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 80
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+        # Health checks to ensure container availability
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 5
